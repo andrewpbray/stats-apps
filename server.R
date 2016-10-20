@@ -1,16 +1,23 @@
 library(shiny)
+library(ggplot2)
+library(dplyr)
+library(openintro)
+library(broom)
 
 shinyServer(function(input, output) {
 
-  output$distPlot <- renderPlot({
+  output$the_plot <- renderPlot({
 
-    # generate bins based on input$bins from ui.R
-    x    <- faithful[, 2]
-    bins <- seq(min(x), max(x), length.out = input$bins + 1)
+    mod <- bdims %>%
+      lm(wgt ~ hgt, data = .) %>%
+      augment(bdims)
 
-    # draw the histogram with the specified number of bins
-    hist(x, breaks = bins, col = 'darkgray', border = 'white')
-
+    ggplot(data = mod, aes(x = hgt, y = wgt)) +
+      geom_smooth(method = "lm", se = 0, formula = y ~ x,
+                  color = "dodgerblue") +
+      geom_segment(aes(xend = hgt, yend = .fitted),
+                   arrow = arrow(length = unit(0.1, "cm")),
+                   size = 0.5, color = "darkgray") +
+      geom_point(color = "dodgerblue")
   })
-
 })
