@@ -48,17 +48,22 @@ shinyServer(function(input, output) {
                   color = "dodgerblue") +
       geom_point(data = dat_summary(),
                  aes(x = mean_hgt, y = mean_wgt),
-                 color = "red", size = 3) +
-      geom_segment(aes(xend = hgt, yend = .fitted),
-                   arrow = arrow(length = unit(0.1, "cm")),
-                   size = 0.5, color = "darkgray") +
+                 color = "red", size = 3)
 
-      if(TRUE) {
-        g <- g +
-          geom_abline(data = dat_summary(),
-                      aes(intercept = 80, slope = 0),
-                      color = "dodgerblue")
-      }
+    # Show residuals?
+    if(input$show_residuals) {
+      g <- g +
+        geom_segment(aes(xend = hgt, yend = .fitted),
+                     arrow = arrow(length = unit(0.1, "cm")),
+                     size = 0.5, color = "darkgray")
+    }
+
+    # Show best fit line?
+    if(input$show_best_fit) {
+      g <- g +
+        geom_smooth(method = "lm", se = 0, formula = y ~ x,
+                    color = "red", fullrange = TRUE)
+    }
 
     g
   })
