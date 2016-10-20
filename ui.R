@@ -2,15 +2,23 @@ library(shiny)
 
 shinyUI(fluidPage(
 
-  titlePanel("Finding the best fit line"),
+  titlePanel("Find the best fit line"),
 
   sidebarLayout(
     sidebarPanel(
-      sliderInput("bins",
-                  "Something here:",
-                  min = 1,
-                  max = 50,
-                  value = 30)
+      sliderInput("n",
+                  "Number of points:",
+                  min = 2,
+                  max = 507,
+                  value = 20
+      ),
+      sliderInput("sl",
+                  "Slope of line:",
+                  min = -2,
+                  max = 5,
+                  value = 2,
+                  step = 0.25
+      )
     ),
 
     mainPanel(
