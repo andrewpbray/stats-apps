@@ -12,8 +12,8 @@ dashboardPage(
     ),
     sliderInput("sl",
                 "Slope of line:",
-                min = -2,
-                max = 5,
+                min = min(sl_poss),
+                max = max(sl_poss),
                 value = 2,
                 step = 0.25
     ),
@@ -23,7 +23,10 @@ dashboardPage(
   dashboardBody(
     fluidRow(
       box(width = 6,
-        plotOutput("the_plot")
+          plotOutput("the_plot")
+      ),
+      box(width = 6,
+          plotOutput("ss_curve")
       )
     )
   )

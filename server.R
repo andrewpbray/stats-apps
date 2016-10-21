@@ -3,6 +3,7 @@ library(ggplot2)
 library(dplyr)
 library(openintro)
 library(broom)
+library(oilabs)
 
 shinyServer(function(input, output) {
 
@@ -37,6 +38,21 @@ shinyServer(function(input, output) {
       mutate(.fitted = f(hgt))
   })
 
+  all_ss <- reactive({
+
+    int <- dat_summary()$intercept
+    nr <- nrow(dat())
+
+    dat() %>%
+      rep_sample_n(nr, reps = length(sl_poss), replace = FALSE) %>%
+      ungroup() %>%
+      mutate(slope = rep(sl_poss, each = nr),
+             .fitted = make_fun(int, slope)(hgt)
+      ) %>%
+      group_by(slope) %>%
+      summarize(ssr = sum((wgt - .fitted)^2))
+  })
+
   output$the_plot <- renderPlot({
 
     # Generate plot
@@ -66,5 +82,19 @@ shinyServer(function(input, output) {
     }
 
     g
+  })
+
+  output$ss_curve <- renderPlot({
+
+    ss_df <- all_ss()
+
+    sel <- ss_df %>%
+      filter(slope == input$sl)
+
+    ggplot(ss_df, aes(x = slope, y = ssr)) +
+      geom_line() +
+      geom_point(data = sel, aes(x = slope, y = ssr),
+                 color = "red", size = 5, shape = 4) +
+      lims(x = range(sl_poss), y = c(0, 5e+06))
   })
 })
