@@ -11,4 +11,4 @@ make_fun <- function(intercept, slope) {
 }
 
 # Possible slopes
-sl_poss <- seq(-2, 5, by = 0.25)
+sl_poss <- seq(-2, 7, by = 0.25)
