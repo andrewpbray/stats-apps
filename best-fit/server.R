@@ -45,7 +45,7 @@ shinyServer(function(input, output) {
     })
 
     nr <- nrow(dat())
-    browser()
+
     dat() %>%
       rep_sample_n(nr, reps = length(sl_poss), replace = FALSE) %>%
       ungroup() %>%
