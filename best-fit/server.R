@@ -40,9 +40,12 @@ shinyServer(function(input, output) {
 
   all_ss <- reactive({
 
-    int <- dat_summary()$intercept
-    nr <- nrow(dat())
+    isolate({
+      int <- dat_summary()$intercept
+    })
 
+    nr <- nrow(dat())
+    browser()
     dat() %>%
       rep_sample_n(nr, reps = length(sl_poss), replace = FALSE) %>%
       ungroup() %>%
@@ -57,7 +60,6 @@ shinyServer(function(input, output) {
 
     # Generate plot
     g <- ggplot(data = dat_plus(), aes(x = hgt, y = wgt)) +
-      lims(x = c(145, 200), y = c(40, 118)) +
       geom_point() +
       geom_abline(data = dat_summary(),
                   aes(intercept = intercept, slope = slope),
@@ -94,7 +96,6 @@ shinyServer(function(input, output) {
     ggplot(ss_df, aes(x = slope, y = ssr)) +
       geom_line() +
       geom_point(data = sel, aes(x = slope, y = ssr),
-                 color = "red", size = 5, shape = 4) +
-      lims(x = range(sl_poss), y = c(0, 5e+06))
+                 color = "red", fill = "red", size = 5, shape = 23)
   })
 })
