@@ -22,10 +22,10 @@ dashboardPage(
   ),
   dashboardBody(
     fluidRow(
-      box(width = 6,
+      box(width = 6, title = "Find the best fit line!",
           plotOutput("the_plot")
       ),
-      box(width = 6,
+      box(width = 6, title = "Sum of Squared Residuals (SSR) vs. Slope of Line",
           plotOutput("ss_curve")
       )
     )
