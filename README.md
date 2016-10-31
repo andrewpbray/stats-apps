@@ -5,7 +5,7 @@ These are experimental Shiny apps, designed to accompany the intro stats courses
 Example of how to run an app from the R console:
 
 ```
-install.packages("shiny") # install shiny, if necessary
+install.packages("shiny", "shinydashboard") # install shiny, if necessary
 library(shiny)
 runGitHub("stats-apps", "datacamp", subdir = "best-fit")
 ```
