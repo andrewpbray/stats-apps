@@ -30,4 +30,5 @@ results <- results %>%
 results
 
 ggplot(results, aes(x = n, fill = last)) +
-  geom_dotplot()
+  geom_dotplot() +
+  xlim(c(3, 9))
