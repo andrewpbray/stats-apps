@@ -1,3 +1,5 @@
+# modelled after http://www.rossmanchance.com/applets/ChiSqShuffle.html?dolphins=1&count=1
+
 library(ggplot2)
 library(dplyr)
 
