@@ -21,14 +21,17 @@ new_results <- dat %>%
   shuffle_data() %>%
   summarize_results() %>%
   filter(treatment == "dolphins", response == "improved") %>%
-  mutate(last = TRUE)
+  mutate(current = TRUE)
 new_results
 
 results <- results %>%
-  mutate(last = FALSE) %>%
+  mutate(current = FALSE) %>%
   bind_rows(new_results)
+
+results$current[results$n == new_results$n] <- TRUE
 results
 
-ggplot(results, aes(x = n, fill = last)) +
+ggplot(results, aes(x = n, fill = current)) +
   geom_dotplot() +
-  xlim(c(3, 9))
+  xlim(c(4, 10)) +
+  theme(legend.position = "none")
