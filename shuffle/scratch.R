@@ -15,8 +15,10 @@ summarize_results <- function(x) {
     summarize(n = n())
 }
 
+# initialize results
 results <- data_frame()
 
+# iterate over the rest of this code (doesn't work in for loop?)
 new_results <- dat %>%
   shuffle_data() %>%
   summarize_results() %>%
