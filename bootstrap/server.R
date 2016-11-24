@@ -34,8 +34,7 @@ shinyServer(function(input, output) {
   })
 
   ###### BOOTSTRAPPED FLIPS + SUMMARY ######
-  flips_boot <- reactive({
-    input$bootstrap_button
+  flips_boot <- eventReactive(input$bootstrap_button, {
     dplyr::sample_frac(flips_orig(), replace = TRUE)
   })
 
