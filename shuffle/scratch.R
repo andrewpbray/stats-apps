@@ -35,7 +35,8 @@ results <- results %>%
 results$current[results$n == new_results$n] <- TRUE
 results
 
-ggplot(results, aes(x = n, fill = current)) +
+p <- ggplot(results, aes(x = n, fill = current)) +
   geom_dotplot() +
   xlim(c(4, 10)) +
   theme(legend.position = "none")
+p
