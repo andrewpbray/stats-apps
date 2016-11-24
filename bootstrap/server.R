@@ -1,26 +1,37 @@
 library(shiny)
 library(ggplot2)
+library(dplyr)
 
 shinyServer(function(input, output) {
 
-  output$test_plot1 <- renderPlot({
-
-    ggplot(mtcars, aes(x = mpg)) +
-      geom_dotplot() +
-      theme(legend.position = "none")
+  flips_boot <- reactive({
+    input$flip_coin_button
+    dplyr::sample_frac(flips_orig, replace = TRUE)
   })
 
-  output$test_plot2 <- renderPlot({
+  output$bootstrap_dotplot <- renderPlot({
+    flips <- flips_boot()
+    flips_summary <- summarize_flips(flips)
 
-    ggplot(mtcars, aes(x = mpg)) +
+    ggplot(flips_summary, aes(x = prop_heads)) +
       geom_dotplot() +
-      theme(legend.position = "none")
+      theme(legend.position = "none") +
+      xlim(c(0, 1))
   })
 
-  output$test_plot3 <- renderPlot({
+  output$original_data <- renderPrint({
+    print(flips_orig)
+  })
 
-    ggplot(mtcars, aes(x = mpg)) +
-      geom_dotplot() +
-      theme(legend.position = "none")
+  output$original_summary <- renderPrint({
+    summarize_flips(flips_orig)
+  })
+
+  output$bootstrap_data <- renderPrint({
+    print(flips_boot())
+  })
+
+  output$bootstrap_summary <- renderPrint({
+    summarize_flips(flips_boot())
   })
 })
