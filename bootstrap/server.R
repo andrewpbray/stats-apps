@@ -78,4 +78,16 @@ shinyServer(function(input, output) {
   output$bootstrap_summary <- renderPrint({
     flips_boot_summary()
   })
+
+  ###### HELP MODAL ######
+  observeEvent(input$help_button, {
+    showModal(modalDialog(
+      title = "Instructions",
+      HTML(
+        "<ol><li>Select the number of coin flips you wish to perform as well as the probability of flipping 'Heads'</li>",
+        "<li>Press the 'Generate Original Data' button to flip the coin and generate data from which bootstrapped samples will be taken</li>",
+        "<li>Press the 'Take Bootstrap Sample' button to take a bootstrap sample from the original data</li>"
+      )
+    ))
+  })
 })

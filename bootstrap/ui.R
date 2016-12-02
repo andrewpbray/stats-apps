@@ -13,15 +13,10 @@ dashboardPage(
           numericInput("p_heads", "Probability of Heads", 0.5,
                        min = 0, max = 1, step = 0.05
           ),
-          actionButton("flip_coin_button", "Generate Original Data", width = "100%"),
+          actionButton("flip_coin_button", "Regenerate Original Data", width = "100%"),
           actionButton("bootstrap_button", "Take Bootstrap Sample", width = "100%"),
           hr(),
-          helpText(HTML(
-            "<h4>Instructions</h4>",
-            "<ol><li>Select the number of coin flips you wish to perform as well as the probability of flipping 'Heads'</li>",
-            "<li>Press the 'Generate Original Data' button to flip the coin and generate data from which bootstrapped samples will be taken</li>",
-            "<li>Press the 'Take Bootstrap Sample' button to take a bootstrap sample from the original data</li>"
-          ))
+          actionButton("help_button", "Help", width = "100%")
       ),
       box(width = 3, title = "Original sample",
           verbatimTextOutput("original_data"),
