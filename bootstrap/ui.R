@@ -13,7 +13,7 @@ dashboardPage(
           numericInput("p_heads", "Probability of Heads", 0.5,
                        min = 0, max = 1, step = 0.05
           ),
-          actionButton("flip_coin_button", "Regenerate Original Data", width = "100%"),
+          actionButton("flip_coin_button", "Regenerate Original Data (Clear All)", width = "100%"),
           hr(),
           selectInput("n_resamples", "Number of Resamples", c(1, 10, 100, 1000), selected = 10),
           actionButton("bootstrap_button", "Resample!", width = "100%"),
@@ -22,14 +22,14 @@ dashboardPage(
       ),
       box(width = 3, title = "Original Data",
           verbatimTextOutput("original_data"),
-          verbatimTextOutput("original_summary")
+          verbatimTextOutput("original_data_summary")
       ),
       box(width = 3, title = "Bootstrapped Proportions",
           plotOutput("bootstrap_dotplot")
       ),
-      box(width = 3, title = "Last Resample",
-          verbatimTextOutput("bootstrap_data"),
-          verbatimTextOutput("bootstrap_summary")
+      box(width = 3, title = "Last Resample(s)",
+          verbatimTextOutput("last_resamples"),
+          verbatimTextOutput("last_resamples_summary")
       )
     )
   )

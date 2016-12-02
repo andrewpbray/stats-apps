@@ -1,19 +1,24 @@
 library(shiny)
 library(ggplot2)
+library(oilabs)
 library(dplyr)
 
 shinyServer(function(input, output) {
 
   ###### INITIALIZE REACTIVE VALUES ######
-  vals <- reactiveValues(all_bootstrap_summaries = data_frame())
+  vals <- reactiveValues(
+    original_data =- data_frame(),
+    last_resamples = data_frame(),
+    all_resamples = data_frame()
+  )
 
   ###### ORIGINAL FLIPS + SUMMARY ######
-  flips_orig <- reactive({
-
+  observe({
     input$flip_coin_button
 
-    # If coin is flipped, clear saved summaries
-    vals$all_bootstrap_summaries <- data_frame()
+    # If coin is flipped, clear all
+    vals$last_resamples <- data_frame()
+    vals$all_resamples <- data_frame()
 
     isolate({
       n_flips <- input$n_flips
@@ -23,37 +28,35 @@ shinyServer(function(input, output) {
     probs <- c(p_heads, 1 - p_heads)
     flips <- sample(c("H", "T"), size = n_flips, replace = TRUE, prob = probs)
 
-    data_frame(
+    vals$original_data <- data_frame(
       flip_num = seq_along(flips),
       flip = flips
     )
   })
 
-  flips_orig_summary <- reactive({
-    summarize_flips(flips_orig())
+  original_data_summary <- reactive({
+    summarize_flips(vals$original_data)
   })
 
   ###### BOOTSTRAPPED FLIPS + SUMMARY ######
-  flips_boot <- eventReactive(input$bootstrap_button, {
-    dplyr::sample_frac(flips_orig(), replace = TRUE)
-  })
-
-  flips_boot_summary <- reactive({
-    summarize_flips(flips_boot())
-  })
-
-  ###### UPDATE SAVED BOOTSTRAP SUMMARIES ######
   observeEvent(input$bootstrap_button, {
+    od <- vals$original_data
+    n_reps <- input$n_resamples
+    vals$last_resamples <- rep_sample_n(od, nrow(od), replace = TRUE, reps = n_reps)
+    vals$all_resamples <- bind_rows(vals$resamples, vals$last_resamples)
+  })
 
-    all_summaries <- vals$all_bootstrap_summaries
-    this_summary <- flips_boot_summary()
+  last_resamples_summary <- reactive({
+    summarize_flips(vals$last_resample)
+  })
 
-    vals$all_bootstrap_summaries <- bind_rows(all_summaries, this_summary)
+  all_resamples_summary <- reactive({
+    summarize_flips(vals$all_resamples)
   })
 
   ###### DOTPLOT OF BOOTSTRAPPED PROPORTIONS ######
   output$bootstrap_dotplot <- renderPlot({
-    all_summaries <- vals$all_bootstrap_summaries
+    all_summaries <- all_resamples_summary()
     validate(need(
       nrow(all_summaries) > 0,
       message = "Click 'Resample!' to get started!"
@@ -67,19 +70,19 @@ shinyServer(function(input, output) {
 
   ###### PRINT SUMMARIES ######
   output$original_data <- renderPrint({
-    flips_orig()
+    vals$original_data
   })
 
-  output$original_summary <- renderPrint({
-    flips_orig_summary()
+  output$original_data_summary <- renderPrint({
+    original_data_summary()
   })
 
-  output$bootstrap_data <- renderPrint({
-    flips_boot()
+  output$last_resamples <- renderPrint({
+    vals$last_resamples
   })
 
-  output$bootstrap_summary <- renderPrint({
-    flips_boot_summary()
+  output$last_resamples_summary <- renderPrint({
+    summarize_flips(vals$last_resamples)
   })
 
   ###### HELP MODAL ######
