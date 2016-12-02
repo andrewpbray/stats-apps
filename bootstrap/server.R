@@ -56,7 +56,7 @@ shinyServer(function(input, output) {
     all_summaries <- vals$all_bootstrap_summaries
     validate(need(
       nrow(all_summaries) > 0,
-      message = "Click 'Take Bootstrap Sample' to get started!"
+      message = "Click 'Resample!' to get started!"
     ))
 
     ggplot(all_summaries, aes(x = prop_heads)) +

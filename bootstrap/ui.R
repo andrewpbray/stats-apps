@@ -6,7 +6,7 @@ dashboardPage(
   dashboardSidebar(disable = TRUE),
   dashboardBody(
     fluidRow(
-      box(width = 2,
+      box(width = 3,
           numericInput("n_flips", "Number of Flips", 10,
                        min = 1, max = 1000, step = 1
           ),
@@ -16,7 +16,7 @@ dashboardPage(
           actionButton("flip_coin_button", "Regenerate Original Data", width = "100%"),
           hr(),
           selectInput("n_resamples", "Number of Resamples", c(1, 10, 100, 1000), selected = 10),
-          actionButton("bootstrap_button", "Take Resample(s)", width = "100%"),
+          actionButton("bootstrap_button", "Resample!", width = "100%"),
           hr(),
           actionButton("help_button", "Help", width = "100%")
       ),
@@ -24,7 +24,7 @@ dashboardPage(
           verbatimTextOutput("original_data"),
           verbatimTextOutput("original_summary")
       ),
-      box(width = 4, title = "Bootstrapped Proportions",
+      box(width = 3, title = "Bootstrapped Proportions",
           plotOutput("bootstrap_dotplot")
       ),
       box(width = 3, title = "Last Resample",
