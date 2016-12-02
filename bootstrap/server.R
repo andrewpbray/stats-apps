@@ -42,11 +42,27 @@ shinyServer(function(input, output) {
   observeEvent(input$bootstrap_button, {
     od <- vals$original_data
     n_reps <- input$n_resamples
-    vals$last_resamples <- rep_sample_n(od, nrow(od), replace = TRUE, reps = n_reps)
-    vals$all_resamples <- bind_rows(vals$all_resamples, vals$last_resamples)
+
+    old_resamples <- vals$all_resamples
+    new_resamples <- rep_sample_n(od, nrow(od), replace = TRUE, reps = n_reps)
+
+    if(nrow(old_resamples)) {
+      n_reps <- max(old_resamples$replicate)
+    } else {
+      n_reps <- 0
+    }
+
+    new_resamples <- new_resamples %>%
+      ungroup() %>%
+      mutate(replicate = replicate + n_reps) %>%
+      group_by(replicate)
+
+    vals$last_resamples <- new_resamples
+    vals$all_resamples <- bind_rows(old_resamples, new_resamples)
   })
 
   last_resamples_summary <- reactive({
+    browser()
     summarize_flips(vals$last_resamples)
   })
 
@@ -84,7 +100,7 @@ shinyServer(function(input, output) {
   })
 
   output$last_resamples_summary <- renderPrint({
-    res <- summarize_flips(vals$last_resamples)
+    res <- last_resamples_summary()
     validate(need(nrow(res) > 0, message = ""))
     res
   })

@@ -1,8 +1,7 @@
 library(dplyr)
 
 summarize_flips <- function(flips) {
-
-  if(!is.null(flips$replicate)) {
+  if("replicate" %in% names(flips)) {
     flips <- flips %>% group_by(replicate)
   }
   flips %>%
