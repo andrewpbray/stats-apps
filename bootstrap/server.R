@@ -62,7 +62,6 @@ shinyServer(function(input, output) {
   })
 
   last_resamples_summary <- reactive({
-    browser()
     summarize_flips(vals$last_resamples)
   })
 
