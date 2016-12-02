@@ -1,6 +1,10 @@
 library(dplyr)
 
 summarize_flips <- function(flips) {
+
+  if(!is.null(flips$replicate)) {
+    flips <- flips %>% group_by(replicate)
+  }
   flips %>%
     summarize(
       n_heads = sum(flip == "H"),

@@ -43,11 +43,11 @@ shinyServer(function(input, output) {
     od <- vals$original_data
     n_reps <- input$n_resamples
     vals$last_resamples <- rep_sample_n(od, nrow(od), replace = TRUE, reps = n_reps)
-    vals$all_resamples <- bind_rows(vals$resamples, vals$last_resamples)
+    vals$all_resamples <- bind_rows(vals$all_resamples, vals$last_resamples)
   })
 
   last_resamples_summary <- reactive({
-    summarize_flips(vals$last_resample)
+    summarize_flips(vals$last_resamples)
   })
 
   all_resamples_summary <- reactive({
@@ -78,11 +78,15 @@ shinyServer(function(input, output) {
   })
 
   output$last_resamples <- renderPrint({
-    vals$last_resamples
+    lr <- vals$last_resamples
+    validate(need(nrow(lr) > 0, message = ""))
+    lr
   })
 
   output$last_resamples_summary <- renderPrint({
-    summarize_flips(vals$last_resamples)
+    res <- summarize_flips(vals$last_resamples)
+    validate(need(nrow(res) > 0, message = ""))
+    res
   })
 
   ###### HELP MODAL ######
