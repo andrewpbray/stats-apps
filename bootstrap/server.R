@@ -93,15 +93,11 @@ shinyServer(function(input, output) {
   })
 
   output$last_resamples <- renderPrint({
-    lr <- vals$last_resamples
-    validate(need(nrow(lr) > 0, message = ""))
-    lr
+    vals$last_resamples
   })
 
   output$last_resamples_summary <- renderPrint({
-    res <- last_resamples_summary()
-    validate(need(nrow(res) > 0, message = ""))
-    res
+    last_resamples_summary()
   })
 
   ###### HELP MODAL ######
@@ -109,9 +105,10 @@ shinyServer(function(input, output) {
     showModal(modalDialog(
       title = "Instructions",
       HTML(
-        "<ol><li>Select the number of coin flips you wish to perform as well as the probability of flipping 'Heads'</li>",
-        "<li>Press the 'Generate Original Data' button to flip the coin and generate data from which bootstrapped samples will be taken</li>",
-        "<li>Press the 'Take Bootstrap Sample' button to take a bootstrap sample from the original data</li>"
+        "<ol><li>Select the number of coin flips and probability of flipping <em>Heads</em></li>",
+        "<li>Press <em>Regenerate Original Data</em> to flip the coin and generate data from which you will resample</li>",
+        "<li>Select the number of resamples you which to take from the original data</li>",
+        "<li>Press <em>Resample!</em> to take bootstrap samples from the original data</li>"
       )
     ))
   })
