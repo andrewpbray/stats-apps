@@ -54,7 +54,10 @@ shinyServer(function(input, output) {
   ###### DOTPLOT OF BOOTSTRAPPED PROPORTIONS ######
   output$bootstrap_dotplot <- renderPlot({
     all_summaries <- vals$all_bootstrap_summaries
-    validate(need(nrow(all_summaries) > 0, message = "Click 'Take Bootstrap Sample' to get started!"))
+    validate(need(
+      nrow(all_summaries) > 0,
+      message = "Click 'Take Bootstrap Sample' to get started!"
+    ))
 
     ggplot(all_summaries, aes(x = prop_heads)) +
       geom_dotplot(binwidth = 0.05) +
