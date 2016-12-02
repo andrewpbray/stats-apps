@@ -77,8 +77,18 @@ shinyServer(function(input, output) {
       message = "Click 'Resample!' to get started!"
     ))
 
+    if(nrow(all_summaries) <= 70) {
+      d <- ggplot(all_summaries, aes(x = prop_heads)) +
+        geom_dotplot(binwidth = 0.05, method = "histodot") +
+        theme(legend.position = "none") +
+        xlim(c(0, 1)) +
+        scale_y_continuous(name = "", breaks = NULL)
+
+      return(d)
+    }
+
     ggplot(all_summaries, aes(x = prop_heads)) +
-      geom_dotplot(binwidth = 0.05) +
+      geom_histogram(binwidth = 0.05, fill = "black", color = "black") +
       theme(legend.position = "none") +
       xlim(c(0, 1))
   })

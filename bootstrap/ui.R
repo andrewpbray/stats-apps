@@ -13,12 +13,14 @@ dashboardPage(
           numericInput("p_heads", "Probability of Heads", 0.5,
                        min = 0, max = 1, step = 0.05
           ),
-          actionButton("flip_coin_button", "Regenerate Original Data (Clear All)", width = "100%"),
+          actionButton("flip_coin_button", "Regenerate Original Data (Clear All)",
+                       width = "100%", icon = icon("refresh")),
           hr(),
-          selectInput("n_resamples", "Number of Resamples", c(1, 10, 100, 1000), selected = 10),
-          actionButton("bootstrap_button", "Resample!", width = "100%"),
+          selectInput("n_resamples", "Number of Resamples", c(1, 10, 50, 100, 1000), selected = 10),
+          actionButton("bootstrap_button", HTML("<b>Resample!</b>"),
+                       width = "100%", icon = icon("random")),
           hr(),
-          actionButton("help_button", "Help", width = "100%")
+          actionButton("help_button", "Help", width = "100%", icon = icon("question"))
       ),
       box(width = 3, title = "Original Data",
           verbatimTextOutput("original_data"),
