@@ -30,7 +30,7 @@ dashboardPage(
       box(width = 4, title = "Bootstrap dotplot of proportion",
           plotOutput("bootstrap_dotplot")
       ),
-      box(width = 3, title = "Bootstrap sample",
+      box(width = 3, title = "Last bootstrap sample",
           verbatimTextOutput("bootstrap_data"),
           verbatimTextOutput("bootstrap_summary")
       )
