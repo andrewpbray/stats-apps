@@ -1,5 +1,6 @@
 library(shiny)
 library(ggplot2)
+library(tidyr)
 library(dplyr)
 
 shinyServer(function(input, output) {
@@ -16,61 +17,65 @@ shinyServer(function(input, output) {
       as.data.frame()
   })
 
-  output$original_data_summary <- renderPrint({
+  output$original_data_table <- renderPrint({
     original_data %>%
       summarize_results() %>%
-      as.data.frame
+      spread(response, n)
   })
 
   ###### SHUFFLED DATA AND SUMMARY ######
   observeEvent(input$shuffle_button, {
-
-    # iterate over the rest of this code (doesn't work in for loop?)
-    new_results <- original_data %>%
-      shuffle_data() %>%
-      summarize_results() %>%
-      filter(treatment == "dolphins", response == "improved") %>%
-      mutate(current = TRUE)
-
-    results <- vals$all_shuffled_data %>%
-      mutate(current = FALSE) %>%
-      bind_rows(new_results)
-
-    results$current[results$n == new_results$n] <- TRUE
-
-    vals$all_shuffled_data <- results
-    vals$last_shuffed_data <- new_results
-  })
-
-  last_shuffled_data_summary <- reactive({
     lsd <- vals$last_shuffled_data
-    if(!nrow(lsd)) return(NULL)
+    asd <- vals$all_shuffled_data
 
-    lsd %>% summarize_results()
-  })
+    # add rep column to keep track of different reps
+    if(!nrow(asd)) {
+      cnt <- 0
+    } else {
+      cnt <- max(asd$rep)
+    }
 
-  all_shuffled_data_summary <- reactive({
-    vals$all_shuffled_data %>%
-      summarize_results()
+    # create shuffled data
+    lsd <- original_data %>%
+      shuffle_data() %>%
+      mutate(rep = cnt + 1)
+
+    # update reactive vals
+    vals$last_shuffled_data <- lsd
+    vals$all_shuffled_data <- asd %>%
+      bind_rows(lsd)
   })
 
   ###### SHUFFLED DATA OUTPUT ######
   output$last_shuffled_data <- renderPrint({
-    #browser()
     vals$last_shuffled_data
   })
 
-  output$last_shuffled_data_summary <- renderPrint({
-    last_shuffled_data_summary()
+  output$last_shuffled_data_table <- renderPrint({
+    lsd <- vals$last_shuffled_data
+    if(!nrow(lsd)) return(data_frame())
+    lsd %>%
+      summarize_results() %>%
+      spread(response, n)
   })
 
   ###### SHUFFLED DATA PLOT #######
-  output$shuffled_data_plot <- renderPlot({
+  all_successes <- reactive({
     asd <- vals$all_shuffled_data
-    validate(need(nrow(asd) > 0, message = "Press 'Shuffle!' to get started!"))
+    if(!nrow(asd)) return(NULL)
 
-    print(asd)
-    ggplot(asd, aes(x = n, fill = current)) +
+    asd %>%
+      summarize_results() %>%
+      filter(treatment == "dolphins", response == "improved")
+  })
+
+  output$shuffled_data_plot <- renderPlot({
+    as <- all_successes()
+    validate(need(as, message = "Press 'Shuffle!' to get started!"))
+
+    print(as)
+
+    ggplot(as, aes(x = n)) +
       geom_dotplot(binwidth = 0.5) +
       xlim(c(3, 11)) +
       theme(legend.position = "none")

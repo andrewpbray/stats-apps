@@ -15,21 +15,21 @@ dashboardPage(
             h4("Original Data"),
             verbatimTextOutput("original_data"),
             h4("Summary"),
-            verbatimTextOutput("original_data_summary")
+            verbatimTextOutput("original_data_table")
 
         )
       ),
       column(
-        width = 3,
+        width = 4,
         box(width = 12,
             h4("Last Shuffled Data"),
             verbatimTextOutput("last_shuffled_data"),
             h4("Summary"),
-            verbatimTextOutput("last_shuffled_data_summary")
+            verbatimTextOutput("last_shuffled_data_table")
         )
       ),
       column(
-        width = 6,
+        width = 5,
         box(width = 12, title = "Shuffled Data Plot",
             plotOutput("shuffled_data_plot")
         )

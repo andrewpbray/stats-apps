@@ -10,7 +10,11 @@ shuffle_data <- function(x) {
 }
 
 summarize_results <- function(x) {
-  x %>%
-    group_by(treatment, response) %>%
-    summarize(n = n())
+
+  if("rep" %in% names(x)) {
+    x <- x %>% group_by(rep, treatment, response)
+  } else {
+    x <- x %>% group_by(treatment, response)
+  }
+  x %>% summarize(n = n())
 }

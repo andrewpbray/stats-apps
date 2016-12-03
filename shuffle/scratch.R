@@ -13,7 +13,7 @@ shuffle_data <- function(x) {
 
 summarize_results <- function(x) {
   x %>%
-    group_by(treatment, response) %>%
+    group_by(rep, treatment, response) %>%
     summarize(n = n())
 }
 
