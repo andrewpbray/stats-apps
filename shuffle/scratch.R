@@ -7,7 +7,7 @@ dat <- readr::read_tsv("shuffle/data/dolphins.tsv") %>%
   rename(treatment = EV, response = RV)
 
 shuffle_data <- function(x) {
-  dat %>%
+  x %>%
     mutate(response = sample(response))
 }
 
