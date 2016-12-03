@@ -7,7 +7,7 @@ shinyServer(function(input, output) {
 
   ###### INITIALIZE REACTIVE VALUES ######
   vals <- reactiveValues(
-    original_data =- data_frame(),
+    original_data = data_frame(),
     last_resamples = data_frame(),
     all_resamples = data_frame()
   )
