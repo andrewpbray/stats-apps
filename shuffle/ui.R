@@ -6,24 +6,34 @@ dashboardPage(
   dashboardSidebar(disable = TRUE),
   dashboardBody(
     fluidRow(
-      box(width = 3,
-          actionButton("shuffle_button", HTML("<b>Shuffle!</b>"),
-                       width = "100%", icon = icon("random")),
-          actionButton("help_button", "Help", width = "100%", icon = icon("question"))
+      column(
+        width = 3,
+        box(width = 12,
+            actionButton("shuffle_button", HTML("<b>Shuffle!</b>"),
+                         width = "100%", icon = icon("random")),
+            actionButton("help_button", "Help", width = "100%", icon = icon("question")),
+            h4("Original Data"),
+            verbatimTextOutput("original_data"),
+            h4("Summary"),
+            verbatimTextOutput("original_data_summary")
+
+        )
       ),
-      box(width = 3,
-          h4("Original Data"),
-          verbatimTextOutput("original_data"),
-          h4("Summary"),
-          verbatimTextOutput("original_data_summary")
+      column(
+        width = 3,
+        box(width = 12,
+            h4("Last Shuffled Data"),
+            verbatimTextOutput("last_shuffled_data"),
+            h4("Summary"),
+            verbatimTextOutput("last_shuffled_data_summary")
+        )
+      ),
+      column(
+        width = 6,
+        box(width = 12, title = "Shuffled Data Plot",
+            plotOutput("shuffled_data_plot")
+        )
       )
-      # box(width = 3, title = "Bootstrapped Proportions",
-      #     plotOutput("bootstrap_dotplot")
-      # ),
-      # box(width = 3, title = "Last Resample(s)",
-      #     verbatimTextOutput("last_resamples"),
-      #     verbatimTextOutput("last_resamples_summary")
-      # )
     )
   )
 )
