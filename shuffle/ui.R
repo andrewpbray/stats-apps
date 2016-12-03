@@ -7,16 +7,15 @@ dashboardPage(
   dashboardBody(
     fluidRow(
       column(
-        width = 3,
+        width = 4,
         box(width = 12,
-            actionButton("shuffle_button", HTML("<b>Shuffle!</b>"),
-                         width = "100%", icon = icon("random")),
-            actionButton("help_button", "Help", width = "100%", icon = icon("question")),
             h4("Original Data"),
             verbatimTextOutput("original_data"),
             h4("Summary"),
-            verbatimTextOutput("original_data_table")
-
+            verbatimTextOutput("original_data_table"),
+            actionButton("shuffle_button", HTML("<b>Shuffle!</b>"),
+                         width = "100%", icon = icon("random")),
+            actionButton("help_button", "Help", width = "100%", icon = icon("question"))
         )
       ),
       column(
@@ -29,7 +28,7 @@ dashboardPage(
         )
       ),
       column(
-        width = 5,
+        width = 4,
         box(width = 12, title = "Shuffled Data Plot",
             plotOutput("shuffled_data_plot")
         )

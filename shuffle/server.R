@@ -38,7 +38,8 @@ shinyServer(function(input, output) {
     # create shuffled data
     lsd <- original_data %>%
       shuffle_data() %>%
-      mutate(rep = cnt + 1)
+      mutate(rep = cnt + 1) %>%
+      select(rep, treatment, response)
 
     # update reactive vals
     vals$last_shuffled_data <- lsd
@@ -48,12 +49,17 @@ shinyServer(function(input, output) {
 
   ###### SHUFFLED DATA OUTPUT ######
   output$last_shuffled_data <- renderPrint({
-    vals$last_shuffled_data
+    lsd <- vals$last_shuffled_data
+    if(!nrow(lsd)) return(data_frame())
+
+    vals$last_shuffled_data %>%
+      as.data.frame()
   })
 
   output$last_shuffled_data_table <- renderPrint({
     lsd <- vals$last_shuffled_data
     if(!nrow(lsd)) return(data_frame())
+
     lsd %>%
       summarize_results() %>%
       spread(response, n)
@@ -76,9 +82,10 @@ shinyServer(function(input, output) {
     print(as)
 
     ggplot(as, aes(x = n)) +
-      geom_dotplot(binwidth = 0.5) +
-      xlim(c(3, 11)) +
-      theme(legend.position = "none")
+      geom_dotplot(binwidth = .5) +
+      scale_x_continuous(breaks = 2:11, limits = c(2, 11)) +
+      scale_y_continuous(name = "", breaks = NULL) +
+      theme(legend.position = "none", panel.grid.minor = element_blank())
   })
 
   ###### HELP MODAL ######
