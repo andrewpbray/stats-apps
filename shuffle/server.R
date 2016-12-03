@@ -20,7 +20,8 @@ shinyServer(function(input, output) {
   output$original_data_table <- renderPrint({
     original_data %>%
       summarize_results() %>%
-      spread(response, n)
+      spread(response, n) %>%
+      as.data.frame()
   })
 
   ###### SHUFFLED DATA AND SUMMARY ######
@@ -50,19 +51,23 @@ shinyServer(function(input, output) {
   ###### SHUFFLED DATA OUTPUT ######
   output$last_shuffled_data <- renderPrint({
     lsd <- vals$last_shuffled_data
-    if(!nrow(lsd)) return(data_frame())
+    validate(need(nrow(lsd) > 0, message = ""))
 
     vals$last_shuffled_data %>%
+      select(-rep) %>%
       as.data.frame()
   })
 
   output$last_shuffled_data_table <- renderPrint({
     lsd <- vals$last_shuffled_data
-    if(!nrow(lsd)) return(data_frame())
+    validate(need(nrow(lsd) > 0, message = ""))
 
     lsd %>%
       summarize_results() %>%
-      spread(response, n)
+      ungroup() %>%
+      select(-rep) %>%
+      spread(response, n) %>%
+      as.data.frame()
   })
 
   ###### SHUFFLED DATA PLOT #######
